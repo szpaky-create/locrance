@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loc'Rance — Location de bateaux à Saint-Malo</title>
+    <meta name="description" content="Louez votre bateau à Saint-Malo avec Loc'Rance. Bateaux moteur et voilier avec permis côtier. Découvrez la Côte d'Émeraude depuis la mer.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0B1D3A;
+            --navy-light: #1a3158;
+            --ocean: #1B6B93;
+            --sky: #3AA6B9;
+            --sand: #F5E6CA;
+            --sand-light: #FFF8EE;
+            --coral: #E8734A;
+            --coral-dark: #D4623B;
+            --white: #FFFFFF;
+            --grey-100: #F7F8FA;
+            --grey-200: #E8ECF1;
+            --grey-500: #8494A7;
+            --grey-700: #4A5568;
+            --grey-900: #1A202C;
+            --shadow-sm: 0 1px 3px rgba(11,29,58,0.08);
+            --shadow-md: 0 4px 14px rgba(11,29,58,0.1);
+            --shadow-lg: 0 10px 30px rgba(11,29,58,0.12);
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--grey-900);
+            line-height: 1.7;
+            background: var(--white);
+            overflow-x: hidden;
+        }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; line-height: 1.25; }
+
+        /* ========== NAV ========== */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 0;
+            transition: all 0.35s ease;
+        }
+        .nav.scrolled {
+            background: rgba(11,29,58,0.95);
+            backdrop-filter: blur(12px);
+            padding: 10px 0;
+            box-shadow: var(--shadow-md);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo img { height: 50px; border-radius: 8px; }
+        .nav.scrolled .nav-logo img { height: 40px; }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            color: var(--white); text-decoration: none; font-size: 0.92rem;
+            font-weight: 500; letter-spacing: 0.02em;
+            position: relative; transition: color 0.25s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 2px; background: var(--coral);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: var(--coral); color: var(--white) !important;
+            padding: 10px 24px; border-radius: 50px; font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .nav-cta:hover { background: var(--coral-dark); transform: translateY(-1px); }
+        .nav-cta::after { display: none !important; }
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px; cursor: pointer;
+            background: none; border: none; padding: 8px;
+        }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); transition: all 0.3s; }
+
+        /* ========== HERO ========== */
+        .hero {
+            position: relative; height: 100vh; min-height: 600px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('images/hero.jpg') center/cover no-repeat;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(11,29,58,0.55) 0%, rgba(11,29,58,0.3) 40%, rgba(11,29,58,0.65) 100%);
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center;
+            max-width: 800px; padding: 0 24px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+            padding: 8px 20px; border-radius: 50px;
+            font-size: 0.85rem; color: var(--sand); letter-spacing: 0.1em;
+            text-transform: uppercase; font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            color: var(--white); font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .hero h1 span { color: var(--coral); }
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: rgba(255,255,255,0.85); max-width: 580px;
+            margin: 0 auto 36px; font-weight: 300;
+        }
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 50px; font-weight: 600;
+            font-size: 0.95rem; text-decoration: none;
+            transition: all 0.25s ease; cursor: pointer; border: none;
+        }
+        .btn-primary { background: var(--coral); color: var(--white); }
+        .btn-primary:hover { background: var(--coral-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,115,74,0.35); }
+        .btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.5); }
+        .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+        .scroll-indicator {
+            position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+            z-index: 2; animation: bounce 2s infinite;
+        }
+        .scroll-indicator svg { width: 28px; height: 28px; stroke: rgba(255,255,255,0.6); }
+        @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(10px); } }
+
+        /* ========== SECTIONS ========== */
+        .section { padding: 100px 24px; }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header .label {
+            display: inline-block; color: var(--coral); font-weight: 600;
+            font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 2.8rem); color: var(--navy); margin-bottom: 16px; }
+        .section-header p { color: var(--grey-500); max-width: 600px; margin: 0 auto; font-size: 1.05rem; }
+
+        /* ========== BOATS ========== */
+        .boats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+        .boat-card {
+            background: var(--white); border-radius: var(--radius-lg);
+            overflow: hidden; box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+        }
+        .boat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .boat-card-img { height: 220px; overflow: hidden; position: relative; }
+        .boat-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .boat-card:hover .boat-card-img img { transform: scale(1.06); }
+        .boat-badge {
+            position: absolute; top: 14px; left: 14px;
+            background: var(--coral); color: var(--white);
+            padding: 4px 14px; border-radius: 50px; font-size: 0.78rem;
+            font-weight: 600; letter-spacing: 0.04em;
+        }
+        .boat-card-body { padding: 24px; }
+        .boat-card-body h3 { font-size: 1.35rem; color: var(--navy); margin-bottom: 8px; }
+        .boat-specs {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            margin: 12px 0 16px; font-size: 0.85rem; color: var(--grey-500);
+        }
+        .boat-specs span { display: flex; align-items: center; gap: 5px; }
+        .boat-specs svg { width: 16px; height: 16px; stroke: var(--ocean); }
+        .boat-desc { color: var(--grey-700); font-size: 0.92rem; margin-bottom: 20px; }
+        .boat-price {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 16px; border-top: 1px solid var(--grey-200);
+        }
+        .boat-price .from { font-size: 0.82rem; color: var(--grey-500); }
+        .boat-price .price { font-size: 1.4rem; font-weight: 700; color: var(--coral); font-family: 'Playfair Display', serif; }
+        .boat-price .unit { font-size: 0.82rem; color: var(--grey-500); font-weight: 400; }
+        .boat-cta-row {
+            display: flex; align-items: center; gap: 12px;
+            margin-top: 14px; font-size: 0.85rem; color: var(--ocean); font-weight: 500;
+        }
+        .boat-cta-row svg { width: 16px; height: 16px; stroke: var(--ocean); }
+
+        /* ========== BOAT MODAL ========== */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(11,29,58,0.85); backdrop-filter: blur(6px);
+            justify-content: center; align-items: center;
+            padding: 24px; overflow-y: auto;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--white); border-radius: var(--radius-lg);
+            max-width: 900px; width: 100%; max-height: 90vh;
+            overflow-y: auto; position: relative;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.35s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; z-index: 10;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: var(--coral); }
+        .modal-close svg { width: 20px; height: 20px; stroke: white; stroke-width: 2; }
+        .modal-gallery {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0; overflow: hidden;
+        }
+        .modal-gallery img {
+            width: 100%; height: 220px; object-fit: cover;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .modal-gallery img:hover { opacity: 0.85; }
+        .modal-gallery img:first-child { grid-column: span 2; height: 320px; }
+        .modal-body { padding: 32px; }
+        .modal-body h2 { font-size: 1.8rem; color: var(--navy); margin-bottom: 6px; }
+        .modal-subtitle { color: var(--grey-500); font-size: 0.95rem; margin-bottom: 24px; }
+        .modal-specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .modal-spec {
+            background: var(--grey-100); border-radius: 12px; padding: 14px 18px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .modal-spec-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: rgba(27,107,147,0.1);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .modal-spec-icon svg { width: 18px; height: 18px; stroke: var(--ocean); }
+        .modal-spec-text { font-size: 0.85rem; }
+        .modal-spec-text strong { display: block; color: var(--navy); font-size: 0.95rem; }
+        .modal-spec-text span { color: var(--grey-500); }
+        .modal-desc { color: var(--grey-700); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.8; }
+        .modal-equip { margin-bottom: 28px; }
+        .modal-equip h4 { font-size: 1rem; color: var(--navy); margin-bottom: 12px; font-family: 'Inter', sans-serif; font-weight: 600; }
+        .modal-equip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .modal-equip-tag {
+            background: var(--grey-100); padding: 6px 14px; border-radius: 50px;
+            font-size: 0.82rem; color: var(--grey-700);
+        }
+        .modal-cta {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .modal-cta .btn { font-size: 0.9rem; padding: 12px 28px; }
+
+        /* ========== TARIFS ========== */
+        .bg-sand { background: var(--sand-light); }
+        .tarif-tabs {
+            display: flex; justify-content: center; gap: 8px;
+            margin-bottom: 40px; flex-wrap: wrap;
+        }
+        .tarif-tab {
+            padding: 10px 24px; border-radius: 50px;
+            border: 2px solid var(--grey-200); background: var(--white);
+            cursor: pointer; font-weight: 500; font-size: 0.9rem;
+            transition: all 0.25s; color: var(--grey-700);
+        }
+        .tarif-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+        .tarif-panel { display: none; }
+        .tarif-panel.active { display: block; }
+        .tarif-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .tarif-table th {
+            background: var(--navy); color: var(--white);
+            padding: 14px 20px; font-weight: 600; font-size: 0.88rem;
+            text-align: left; letter-spacing: 0.03em;
+        }
+        .tarif-table td {
+            padding: 14px 20px; border-bottom: 1px solid var(--grey-200);
+            font-size: 0.92rem;
+        }
+        .tarif-table tr:last-child td { border-bottom: none; }
+        .tarif-table tbody tr { background: var(--white); transition: background 0.2s; }
+        .tarif-table tbody tr:hover { background: var(--grey-100); }
+        .tarif-note {
+            text-align: center; margin-top: 24px;
+            color: var(--grey-500); font-size: 0.88rem; font-style: italic;
+        }
+        .tarif-option {
+            margin-top: 20px; background: var(--white); border-radius: var(--radius);
+            padding: 20px 24px; box-shadow: var(--shadow-sm);
+            display: flex; align-items: center; gap: 16px;
+        }
+        .tarif-option-icon { font-size: 1.5rem; }
+        .tarif-option-text h4 { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--navy); }
+        .tarif-option-text p { font-size: 0.85rem; color: var(--grey-500); margin: 0; }
+
+        /* ========== GALLERY ========== */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 220px); gap: 12px;
+        }
+        .gallery-grid .g-item { border-radius: var(--radius); overflow: hidden; }
+        .gallery-grid .g-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-grid .g-item:hover img { transform: scale(1.08); }
+        .gallery-grid .g-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+
+        /* ========== INFO ========== */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+        .info-card {
+            background: var(--white); border-radius: var(--radius-lg);
+            padding: 32px; box-shadow: var(--shadow-md);
+            transition: transform 0.3s;
+        }
+        .info-card:hover { transform: translateY(-4px); }
+        .info-icon {
+            width: 56px; height: 56px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .info-icon svg { width: 28px; height: 28px; }
+        .info-icon.blue { background: rgba(27,107,147,0.1); }
+        .info-icon.blue svg { stroke: var(--ocean); }
+        .info-icon.coral { background: rgba(232,115,74,0.1); }
+        .info-icon.coral svg { stroke: var(--coral); }
+        .info-icon.green { background: rgba(46,160,67,0.1); }
+        .info-icon.green svg { stroke: #2EA043; }
+        .info-card h3 { font-size: 1.15rem; margin-bottom: 10px; color: var(--navy); }
+        .info-card p { color: var(--grey-700); font-size: 0.92rem; }
+
+        /* ========== CONTACT ========== */
+        .bg-navy { background: var(--navy); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        .contact-info h2 { color: var(--white); font-size: 2.2rem; margin-bottom: 16px; }
+        .contact-info p { color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+        .contact-detail { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+        .contact-detail-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .contact-detail-icon svg { width: 20px; height: 20px; stroke: var(--coral); }
+        .contact-detail-text h4 { color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .contact-detail-text p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin: 0; }
+        .contact-detail-text a { color: var(--sky); text-decoration: none; }
+        .contact-detail-text a:hover { text-decoration: underline; }
+        .social-links { display: flex; gap: 12px; margin-top: 32px; }
+        .social-link {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.25s;
+        }
+        .social-link:hover { background: var(--coral); }
+        .social-link svg { width: 20px; height: 20px; fill: var(--white); }
+
+        .contact-form { background: var(--navy-light); border-radius: var(--radius-lg); padding: 36px; }
+        .contact-form h3 { color: var(--white); font-size: 1.3rem; margin-bottom: 24px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; color: var(--white); font-size: 0.92rem;
+            font-family: 'Inter', sans-serif; transition: border-color 0.25s;
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--coral); }
+        .form-group select option { background: var(--navy); color: var(--white); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-submit {
+            width: 100%; padding: 14px;
+            background: var(--coral); color: var(--white);
+            border: none; border-radius: 50px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: background 0.25s, transform 0.2s;
+        }
+        .form-submit:hover { background: var(--coral-dark); transform: translateY(-1px); }
+
+        /* ========== FOOTER ========== */
+        .footer { background: #060E1A; padding: 48px 24px 24px; text-align: center; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; }
+        .footer-logo img { height: 45px; border-radius: 8px; margin-bottom: 16px; }
+        .footer p { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; margin: 16px 0; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; }
+        .footer-links a:hover { color: var(--coral); }
+        .footer-sep { height: 1px; background: rgba(255,255,255,0.06); margin: 24px 0; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 180px 180px 180px; }
+            .gallery-grid .g-item:nth-child(1) { grid-column: span 2; }
+            .modal-gallery { grid-template-columns: 1fr; }
+            .modal-gallery img:first-child { grid-column: span 1; height: 260px; }
+            .modal-gallery img { height: 180px; }
+            .modal-specs-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column;
+                position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(11,29,58,0.98); padding: 24px;
+                gap: 20px; backdrop-filter: blur(12px);
+            }
+            .hamburger { display: flex; }
+            .section { padding: 64px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+            .boats-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; grid-template-rows: repeat(5, 200px); }
+            .gallery-grid .g-item:nth-child(1) { grid-column: span 1; grid-row: span 1; }
+            .modal-specs-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo"><img src="images/logo.jpg" alt="Loc'Rance"></a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#bateaux">Nos bateaux</a></li>
+            <li><a href="#tarifs">Tarifs</a></li>
+            <li><a href="#galerie">Galerie</a></li>
+            <li><a href="#infos">Infos pratiques</a></li>
+            <li><a href="#contact" class="nav-cta">Réserver</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge">Saint-Malo &bull; Côte d'Émeraude</div>
+        <h1>Prenez le large<br>avec <span>Loc'Rance</span></h1>
+        <p>Location de bateaux moteur et voilier au coeur de Saint-Malo. Découvrez la Côte d'Émeraude, les îles Chausey et le Cap Fréhel depuis la mer.</p>
+        <div class="hero-buttons">
+            <a href="#bateaux" class="btn btn-primary">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 13c2.5-3 5-3 7.5 0s5 3 7.5 0"/><path d="M3 9c2.5-3 5-3 7.5 0s5 3 7.5 0"/></svg>
+                Découvrir nos bateaux
+            </a>
+            <a href="#contact" class="btn btn-outline">Nous contacter</a>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 6l-5 5-5-5"/><path d="M14 14l-5 5-5-5"/></svg>
+    </div>
+</section>
+
+<!-- BATEAUX -->
+<section class="section" id="bateaux">
+    <div class="section-inner">
+        <div class="section-header fade-in">
+            <span class="label">Notre flotte</span>
+            <h2>Choisissez votre embarcation</h2>
+            <p>4 bateaux pour toutes les envies : balades en famille, sorties sportives ou croisières au coucher du soleil.</p>
+        </div>
+        <div class="boats-grid">
+
+            <!-- Flyer 650 -->
+            <div class="boat-card fade-in" onclick="openBoatModal('flyer')">
+                <div class="boat-card-img">
+                    <img src="images/flyer-650.jpg" alt="Flyer 650 Sun Deck" loading="lazy">
+                    <span class="boat-badge">Permis côtier</span>
+                </div>
+                <div class="boat-card-body">
+                    <h3>Flyer 650 Sun Deck</h3>
+                    <div class="boat-specs">
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/><polyline points="18 8 22 12 18 16"/></svg> 6,50 m</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg> 8 pers.</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 140 CV</span>
+                    </div>
+                    <p class="boat-desc">Bateau confortable et puissant, idéal pour les sorties en famille ou entre amis le long de la Côte d'Émeraude.</p>
+                    <div class="boat-price">
+                        <span class="from">À partir de</span>
+                        <span class="price">300 € <span class="unit">/ journée</span></span>
+                    </div>
+                    <div class="boat-cta-row">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Voir les photos et détails
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arkos 520 -->
+            <div class="boat-card fade-in" onclick="openBoatModal('arkos')">
+                <div class="boat-card-img">
+                    <img src="images/arkos-520.jpg" alt="Arkos 520" loading="lazy">
+                    <span class="boat-badge">Permis côtier</span>
+                </div>
+                <div class="boat-card-body">
+                    <h3>Arkos 520</h3>
+                    <div class="boat-specs">
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/><polyline points="18 8 22 12 18 16"/></svg> 5,20 m</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg> 7 pers.</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 115 CV</span>
+                    </div>
+                    <p class="boat-desc">Bateau maniable et sportif. Parfait pour explorer la rade de Saint-Malo et remonter la Rance jusqu'à Dinan.</p>
+                    <div class="boat-price">
+                        <span class="from">À partir de</span>
+                        <span class="price">250 € <span class="unit">/ journée</span></span>
+                    </div>
+                    <div class="boat-cta-row">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Voir les photos et détails
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cap Camarat 470 -->
+            <div class="boat-card fade-in" onclick="openBoatModal('camarat')">
+                <div class="boat-card-img">
+                    <img src="images/cap-camarat-470.jpg" alt="Cap Camarat 470" loading="lazy">
+                    <span class="boat-badge">Permis côtier</span>
+                </div>
+                <div class="boat-card-body">
+                    <h3>Cap Camarat 470</h3>
+                    <div class="boat-specs">
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/><polyline points="18 8 22 12 18 16"/></svg> 4,70 m</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg> 5 pers.</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 50 CV</span>
+                    </div>
+                    <p class="boat-desc">Petit bateau agile et nerveux. Idéal pour un tour dans la baie, une session pêche ou une sortie en duo.</p>
+                    <div class="boat-price">
+                        <span class="from">À partir de</span>
+                        <span class="price">200 € <span class="unit">/ journée</span></span>
+                    </div>
+                    <div class="boat-cta-row">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Voir les photos et détails
+                    </div>
+                </div>
+            </div>
+
+            <!-- Poeti -->
+            <div class="boat-card fade-in" onclick="openBoatModal('poeti')">
+                <div class="boat-card-img">
+                    <img src="images/poeti.jpg" alt="Poeti - Voilier Harmony 38" loading="lazy">
+                    <span class="boat-badge" style="background:var(--ocean)">Voilier</span>
+                </div>
+                <div class="boat-card-body">
+                    <h3>Poeti</h3>
+                    <div class="boat-specs">
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/><polyline points="18 8 22 12 18 16"/></svg> 11,23 m</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg> 8 pers.</span>
+                        <span><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L12 22"/><path d="M4 18C4 18 6 10 12 6C18 10 20 18 20 18"/></svg> 3 cabines</span>
+                    </div>
+                    <p class="boat-desc">Harmony 38 (2007), voilier de croisière élégant. Partez pour une semaine sur les côtes bretonnes ou normandes.</p>
+                    <div class="boat-price">
+                        <span class="from">À partir de</span>
+                        <span class="price">269 € <span class="unit">/ nuit</span></span>
+                    </div>
+                    <div class="boat-cta-row">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Voir les photos et détails
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BOAT MODALS -->
+<div class="modal-overlay" id="boatModal">
+    <div class="modal" id="modalContent">
+        <button class="modal-close" onclick="closeBoatModal()">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        </button>
+        <div id="modalInner"></div>
+    </div>
+</div>
+
+<!-- TARIFS -->
+<section class="section bg-sand" id="tarifs">
+    <div class="section-inner">
+        <div class="section-header fade-in">
+            <span class="label">Tarifs 2026</span>
+            <h2>Des tarifs transparents</h2>
+            <p>Retrouvez tous nos prix selon la saison. Caution de 2 500 € demandée pour chaque location.</p>
+        </div>
+
+        <div class="tarif-tabs fade-in">
+            <button class="tarif-tab active" onclick="showTarif('moteur', this)">Bateaux moteur</button>
+            <button class="tarif-tab" onclick="showTarif('poeti', this)">Poeti (voilier)</button>
+        </div>
+
+        <!-- Moteur -->
+        <div class="tarif-panel active" id="tarif-moteur">
+            <table class="tarif-table fade-in">
+                <thead>
+                    <tr>
+                        <th>Bateau</th>
+                        <th>Formule</th>
+                        <th>Hors saison</th>
+                        <th>Pleine saison</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Flyer 650</strong></td><td>Journée</td><td>300 €</td><td>350 €</td></tr>
+                    <tr><td></td><td>Demi-journée</td><td>200 €</td><td>250 €</td></tr>
+                    <tr><td></td><td>Coucher du soleil</td><td colspan="2" style="text-align:center;color:var(--coral);font-style:italic">Sur demande</td></tr>
+                    <tr><td><strong>Arkos 520</strong></td><td>Journée</td><td>250 €</td><td>300 €</td></tr>
+                    <tr><td></td><td>Demi-journée</td><td>170 €</td><td>200 €</td></tr>
+                    <tr><td></td><td>Coucher du soleil</td><td colspan="2" style="text-align:center;color:var(--coral);font-style:italic">Sur demande</td></tr>
+                    <tr><td><strong>Cap Camarat 470</strong></td><td>Journée</td><td>200 €</td><td>250 €</td></tr>
+                    <tr><td></td><td>Demi-journée</td><td>140 €</td><td>170 €</td></tr>
+                    <tr><td></td><td>Coucher du soleil</td><td colspan="2" style="text-align:center;color:var(--coral);font-style:italic">Sur demande</td></tr>
+                </tbody>
+            </table>
+            <p class="tarif-note">Hors saison : avril, mai, juin, septembre, octobre &bull; Pleine saison : juillet & août</p>
+            <div class="tarif-option">
+                <div class="tarif-option-icon">🧑‍✈️</div>
+                <div class="tarif-option-text">
+                    <h4>Option skipper — Journée 200 € / Demi-journée 100 €</h4>
+                    <p>Profitez d'un skipper professionnel si vous n'avez pas le permis côtier.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Poeti -->
+        <div class="tarif-panel" id="tarif-poeti">
+            <table class="tarif-table fade-in">
+                <thead>
+                    <tr>
+                        <th>Durée</th>
+                        <th>Basse saison</th>
+                        <th>Mi-saison</th>
+                        <th>Haute saison</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Weekend (2 nuits)</strong></td><td>968 €</td><td>1 116 €</td><td>1 284 €</td></tr>
+                    <tr><td><strong>Semaine (6 nuits)</strong></td><td>1 613 €</td><td>1 860 €</td><td>2 140 €</td></tr>
+                </tbody>
+            </table>
+            <p class="tarif-note">Durées intermédiaires disponibles sur demande. Contactez-nous pour un devis personnalisé.</p>
+        </div>
+    </div>
+</section>
+
+<!-- GALERIE -->
+<section class="section" id="galerie">
+    <div class="section-inner">
+        <div class="section-header fade-in">
+            <span class="label">Galerie</span>
+            <h2>L'aventure en images</h2>
+            <p>La Côte d'Émeraude vue depuis nos bateaux. Moments de navigation, couchers de soleil et instants de liberté.</p>
+        </div>
+        <div class="gallery-grid fade-in">
+            <div class="g-item"><img src="images/ambiance-bow.jpg" alt="Vue depuis la proue du Poeti" loading="lazy"></div>
+            <div class="g-item"><img src="images/ambiance-sunset.jpg" alt="Silhouette au coucher de soleil" loading="lazy"></div>
+            <div class="g-item"><img src="images/arkos-520-2.jpg" alt="Arkos 520 au mouillage" loading="lazy"></div>
+            <div class="g-item"><img src="images/poeti-carre.jpg" alt="Intérieur du voilier Poeti" loading="lazy"></div>
+            <div class="g-item"><img src="images/ambiance-swim.jpg" alt="Baignade au coucher du soleil" loading="lazy"></div>
+        </div>
+    </div>
+</section>
+
+<!-- INFOS PRATIQUES -->
+<section class="section bg-sand" id="infos">
+    <div class="section-inner">
+        <div class="section-header fade-in">
+            <span class="label">Bon à savoir</span>
+            <h2>Infos pratiques</h2>
+        </div>
+        <div class="info-grid">
+            <div class="info-card fade-in">
+                <div class="info-icon blue">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3>Horaires</h3>
+                <p>Disponible d'avril à octobre. Journée : 9h-18h. Demi-journée : 9h-13h ou 14h-18h. Coucher du soleil : sur demande.</p>
+            </div>
+            <div class="info-card fade-in">
+                <div class="info-icon coral">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L12 22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <h3>Caution & paiement</h3>
+                <p>Caution de 2 500 € (empreinte CB ou chèque). Paiement par virement, CB ou espèces. Contrat de location fourni.</p>
+            </div>
+            <div class="info-card fade-in">
+                <div class="info-icon green">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h3>Annulation flexible</h3>
+                <p>Annulation gratuite jusqu'à 7 jours avant la date de location. Conditions détaillées dans le contrat.</p>
+            </div>
+            <div class="info-card fade-in">
+                <div class="info-icon blue">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <h3>Lieu de départ</h3>
+                <p>Terminal du ferry, 35400 Saint-Malo. Ponton facilement accessible avec parking à proximité.</p>
+            </div>
+            <div class="info-card fade-in">
+                <div class="info-icon coral">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <h3>Saison 2026</h3>
+                <p>Du 26 avril au 31 octobre. Réservez tôt pour être sûr d'avoir le bateau de votre choix en haute saison !</p>
+            </div>
+            <div class="info-card fade-in">
+                <div class="info-icon green">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <h3>Permis & carburant</h3>
+                <p>Permis côtier obligatoire pour tous les bateaux. Option skipper disponible. Carburant non inclus, bateaux remis avec le plein.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section bg-navy" id="contact">
+    <div class="section-inner">
+        <div class="contact-grid">
+            <div class="contact-info fade-in">
+                <h2>Envie de prendre le large ?</h2>
+                <p>Contactez-nous pour réserver votre bateau ou poser vos questions. Jimmy vous répond rapidement !</p>
+
+                <div class="contact-detail">
+                    <div class="contact-detail-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <div class="contact-detail-text">
+                        <h4>Téléphone</h4>
+                        <p><a href="tel:+33669911303">06 69 91 13 03</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-detail">
+                    <div class="contact-detail-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="contact-detail-text">
+                        <h4>Email</h4>
+                        <p><a href="mailto:jimmy.golivetdu35430@hotmail.fr">jimmy.golivetdu35430@hotmail.fr</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-detail">
+                    <div class="contact-detail-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div class="contact-detail-text">
+                        <h4>Adresse</h4>
+                        <p>Terminal du ferry<br>35400 Saint-Malo</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/locrance35/" target="_blank" class="social-link" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/profile.php?id=61583989473463" target="_blank" class="social-link" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-form fade-in">
+                <h3>Demande de réservation</h3>
+                <form action="https://formspree.io/f/placeholder" method="POST" id="contactForm">
+                    <input type="hidden" name="_subject" value="Nouvelle demande de réservation - Loc'Rance">
+                    <input type="hidden" name="_replyto" id="replyTo">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom">Nom complet</label>
+                            <input type="text" id="nom" name="nom" placeholder="Jean Dupont" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="jean@exemple.fr" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tel">Téléphone</label>
+                            <input type="tel" id="tel" name="telephone" placeholder="06 12 34 56 78">
+                        </div>
+                        <div class="form-group">
+                            <label for="bateau">Bateau souhaité</label>
+                            <select id="bateau" name="bateau">
+                                <option value="">Choisir un bateau</option>
+                                <option value="Flyer 650">Flyer 650 Sun Deck</option>
+                                <option value="Arkos 520">Arkos 520</option>
+                                <option value="Cap Camarat 470">Cap Camarat 470</option>
+                                <option value="Poeti">Poeti (voilier)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date_debut">Date souhaitée</label>
+                            <input type="date" id="date_debut" name="date_debut">
+                        </div>
+                        <div class="form-group">
+                            <label for="formule">Formule</label>
+                            <select id="formule" name="formule">
+                                <option value="">Choisir une formule</option>
+                                <option value="journee">Journée</option>
+                                <option value="demi-journee">Demi-journée</option>
+                                <option value="coucher-soleil">Coucher du soleil</option>
+                                <option value="plusieurs-nuits">Plusieurs nuits (Poeti)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="4" placeholder="Détaillez votre demande..."></textarea>
+                    </div>
+                    <button type="submit" class="form-submit">Envoyer ma demande</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-logo"><img src="images/logo.jpg" alt="Loc'Rance"></div>
+        <div class="footer-links">
+            <a href="#bateaux">Nos bateaux</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="#galerie">Galerie</a>
+            <a href="#infos">Infos</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-sep"></div>
+        <p>Loc'Rance &mdash; SIRET 790 819 643 00038 &mdash; Saint-Malo, Bretagne</p>
+        <p style="margin-top:6px">&copy; 2026 Loc'Rance. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<script>
+// ===== Boat modal data =====
+const boatData = {
+    flyer: {
+        name: 'Flyer 650 Sun Deck',
+        subtitle: 'Beneteau Flyer 650 — Permis côtier obligatoire',
+        images: ['images/flyer-650.jpg', 'images/flyer-650-2.jpg', 'images/ambiance-cockpit.jpg'],
+        specs: [
+            { label: 'Longueur', value: '6,50 m', icon: 'ruler' },
+            { label: 'Capacité', value: '8 personnes', icon: 'users' },
+            { label: 'Motorisation', value: '140 CV', icon: 'bolt' },
+            { label: 'Permis', value: 'Côtier requis', icon: 'shield' },
+        ],
+        desc: 'Le Flyer 650 Sun Deck est un bateau confortable et puissant, parfait pour les sorties en famille ou entre amis. Son bain de soleil avant et sa console centrale offrent un excellent confort pour une journée en mer le long de la Côte d\'Émeraude.',
+        equip: ['Bimini (pare-soleil)', 'Échelle de bain', 'Douchette', 'Rangements étanches', 'GPS / Sondeur', 'Gilets de sauvetage'],
+        price: 'À partir de 300 € / journée'
+    },
+    arkos: {
+        name: 'Arkos 520',
+        subtitle: 'Arkos 520 — Permis côtier obligatoire',
+        images: ['images/arkos-520.jpg', 'images/arkos-520-2.jpg', 'images/ambiance-bow.jpg'],
+        specs: [
+            { label: 'Longueur', value: '5,20 m', icon: 'ruler' },
+            { label: 'Capacité', value: '7 personnes', icon: 'users' },
+            { label: 'Motorisation', value: '115 CV', icon: 'bolt' },
+            { label: 'Permis', value: 'Côtier requis', icon: 'shield' },
+        ],
+        desc: 'L\'Arkos 520 est un bateau maniable et sportif qui vous emmènera explorer la rade de Saint-Malo, les îles du Grand Bé et du Petit Bé, ou remonter la Rance jusqu\'à Dinan. Idéal pour les sorties dynamiques.',
+        equip: ['Bimini (pare-soleil)', 'Échelle de bain', 'Rangements', 'GPS / Sondeur', 'Gilets de sauvetage'],
+        price: 'À partir de 250 € / journée'
+    },
+    camarat: {
+        name: 'Cap Camarat 470',
+        subtitle: 'Jeanneau Cap Camarat 470 — Permis côtier obligatoire',
+        images: ['images/cap-camarat-470.jpg', 'images/cap-camarat-2.jpg', 'images/ambiance-swim.jpg'],
+        specs: [
+            { label: 'Longueur', value: '4,70 m', icon: 'ruler' },
+            { label: 'Capacité', value: '5 personnes', icon: 'users' },
+            { label: 'Motorisation', value: '50 CV', icon: 'bolt' },
+            { label: 'Permis', value: 'Côtier requis', icon: 'shield' },
+        ],
+        desc: 'Le Cap Camarat 470 est un petit bateau agile et nerveux, idéal pour un tour dans la baie de Saint-Malo, une session pêche entre amis ou une sortie en duo. Facile à manoeuvrer et très amusant à piloter.',
+        equip: ['Échelle de bain', 'Rangements', 'Gilets de sauvetage', 'Douchette'],
+        price: 'À partir de 200 € / journée'
+    },
+    poeti: {
+        name: 'Poeti',
+        subtitle: 'Harmony 38 (2007) — Voilier de croisière',
+        images: ['images/poeti.jpg', 'images/poeti-carre.jpg', 'images/poeti-cuisine.jpg', 'images/poeti-cabine.jpg', 'images/poeti-sdb.jpg', 'images/poeti-helm.jpg'],
+        specs: [
+            { label: 'Longueur', value: '11,23 m', icon: 'ruler' },
+            { label: 'Largeur', value: '3,82 m', icon: 'ruler' },
+            { label: 'Capacité', value: '8 personnes', icon: 'users' },
+            { label: 'Motorisation', value: 'Volvo D2-40', icon: 'bolt' },
+            { label: 'Cabines', value: '3 + carré convertible', icon: 'cabin' },
+            { label: 'Année', value: '2007', icon: 'calendar' },
+        ],
+        desc: 'Le Poeti est un Harmony 38, voilier de croisière élégant et spacieux. Avec ses 3 cabines, son carré convertible et sa salle d\'eau, il est parfait pour une semaine de croisière en famille ou entre amis sur les côtes bretonnes et normandes. Départ de Saint-Malo, au Port des Sablons.',
+        equip: ['Annexe Bombard + moteur HB', 'Pilote automatique', 'Traceur GPS', 'Radar', 'VHF', 'Guindeau électrique', 'Panneau 220V', 'Réfrigérateur', 'Chauffe-eau', 'WC + réservoir eaux noires', 'Radeau de survie', 'Gilets de sauvetage', 'Matériel de sécurité complet'],
+        price: 'À partir de 269 € / nuit'
+    }
+};
+
+const specIcons = {
+    ruler: '<line x1="2" y1="12" x2="22" y2="12"/><polyline points="18 8 22 12 18 16"/>',
+    users: '<circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>',
+    bolt: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    cabin: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'
+};
+
+function openBoatModal(id) {
+    const boat = boatData[id];
+    if (!boat) return;
+
+    let galleryHtml = '<div class="modal-gallery">';
+    boat.images.forEach(img => {
+        galleryHtml += '<img src="' + img + '" alt="' + boat.name + '" loading="lazy">';
+    });
+    galleryHtml += '</div>';
+
+    let specsHtml = '<div class="modal-specs-grid">';
+    boat.specs.forEach(s => {
+        const iconSvg = specIcons[s.icon] || specIcons.ruler;
+        specsHtml += '<div class="modal-spec"><div class="modal-spec-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24">' + iconSvg + '</svg></div><div class="modal-spec-text"><strong>' + s.value + '</strong><span>' + s.label + '</span></div></div>';
+    });
+    specsHtml += '</div>';
+
+    let equipHtml = '<div class="modal-equip"><h4>Équipements</h4><div class="modal-equip-list">';
+    boat.equip.forEach(e => { equipHtml += '<span class="modal-equip-tag">' + e + '</span>'; });
+    equipHtml += '</div></div>';
+
+    document.getElementById('modalInner').innerHTML = galleryHtml +
+        '<div class="modal-body">' +
+        '<h2>' + boat.name + '</h2>' +
+        '<p class="modal-subtitle">' + boat.subtitle + '</p>' +
+        specsHtml +
+        '<p class="modal-desc">' + boat.desc + '</p>' +
+        equipHtml +
+        '<div class="modal-cta">' +
+        '<a href="#contact" class="btn btn-primary" onclick="closeBoatModal()">Réserver — ' + boat.price + '</a>' +
+        '<a href="#tarifs" class="btn btn-outline" style="color:var(--navy);border-color:var(--grey-200)" onclick="closeBoatModal()">Voir les tarifs</a>' +
+        '</div></div>';
+
+    document.getElementById('boatModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBoatModal() {
+    document.getElementById('boatModal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('boatModal').addEventListener('click', function(e) {
+    if (e.target === this) closeBoatModal();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeBoatModal();
+});
+
+// ===== Navbar scroll =====
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+
+// ===== Hamburger =====
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    const spans = hamburger.querySelectorAll('span');
+    if (navLinks.classList.contains('open')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+        spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = '';
+    }
+});
+navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        const spans = hamburger.querySelectorAll('span');
+        spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = '';
+    });
+});
+
+// ===== Tarif tabs =====
+function showTarif(id, btn) {
+    document.querySelectorAll('.tarif-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tarif-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tarif-' + id).classList.add('active');
+    btn.classList.add('active');
+}
+
+// ===== Scroll reveal =====
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ===== Smooth scroll =====
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+            const top = target.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({ top, behavior: 'smooth' });
+        }
+    });
+});
+
+// ===== Form =====
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.form-submit');
+    btn.textContent = 'Envoyé !';
+    btn.style.background = '#2EA043';
+    setTimeout(() => { btn.textContent = 'Envoyer ma demande'; btn.style.background = ''; this.reset(); }, 3000);
+});
+document.getElementById('email').addEventListener('input', function() {
+    document.getElementById('replyTo').value = this.value;
+});
+</script>
+
+</body>
+</html>
